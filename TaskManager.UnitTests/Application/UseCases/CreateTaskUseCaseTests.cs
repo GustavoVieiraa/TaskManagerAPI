@@ -1,10 +1,8 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using TaskManager.Application.UseCases;
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Interfaces;
-using Xunit;
 
 namespace TaskManager.UnitTests.Application.UseCases
 {
@@ -39,6 +37,40 @@ namespace TaskManager.UnitTests.Application.UseCases
             capturedTask.IsCompleted.Should().BeFalse();
 
             repositoryMock.Verify(r => r.Add(It.IsAny<TaskItem>()), Times.Once);
+        }
+
+        [Fact]
+        public void Execute_ShouldThrowArgumentException_WhenTitleIsNullOrEmpty()
+        {
+            var useCase = new CreateTaskUseCase(new Mock<ITaskRepository>().Object);
+            var description = "Alterar os direcionamentos de NAS";
+            var dueDate = DateTime.Today.AddDays(1);
+            
+            Action act = () => useCase.Execute(null!, description, dueDate);
+
+            act.Should().Throw<ArgumentException>().WithMessage("Title cannot be empty.");
+        }
+
+        [Fact]
+        public void Execute_ShouldThrowArgumentException_WhenDescriptionIsNullOrEmpty()
+        {
+            var useCase = new CreateTaskUseCase(new Mock<ITaskRepository>().Object);
+            var title = "Título válido";
+            var dueDate = DateTime.Today.AddDays(1);
+
+            Action act = () => useCase.Execute(title, null!, dueDate);
+
+            act.Should().Throw<ArgumentException>().WithMessage("Description cannot be empty.");
+        }
+
+        [Fact]
+        public void Execute_ShouldThrowArgumentException_WhenDueDateIsIntPast()
+        {
+            var useCase = new CreateTaskUseCase(new Mock<ITaskRepository>().Object);
+
+            Action act = () => useCase.Execute("Título válido", "Descrição válida", DateTime.Today.AddDays(-1));
+
+            act.Should().Throw<ArgumentException>().WithMessage("Due date must be today or in the future.");
         }
     }
 }
