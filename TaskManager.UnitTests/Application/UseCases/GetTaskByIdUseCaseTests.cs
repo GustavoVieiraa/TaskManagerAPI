@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using TaskManager.Application.UseCases;
+using TaskManager.Application.UseCases.Tasks;
 using TaskManager.Domain.Entities;
 using TaskManager.Domain.Interfaces;
 
