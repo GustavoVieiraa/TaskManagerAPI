@@ -28,5 +28,19 @@ namespace TaskManager.Domain.Entities
         {
             IsCompleted = true;
         }
+
+        public void UpdateDetails(string title, string description, DateTime dueDate)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException("Title cannot be empty.");
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Description cannot be empty.");
+            if (dueDate < DateTime.Today)
+                throw new ArgumentException("Due date must be today or in the future.");
+
+            Title = title;
+            Description = description;
+            DueDate = dueDate;
+        }
     }
 }
