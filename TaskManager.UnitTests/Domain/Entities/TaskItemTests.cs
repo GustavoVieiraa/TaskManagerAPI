@@ -76,5 +76,58 @@ namespace TaskManager.UnitTests.Domain.Entities
             task1.Id.Should().NotBe(task2.Id);
         }
 
+        [Fact]
+        public void UpdateDetails_ShouldUpdateFields_WhenDataIsValid()
+        {
+            var task = new TaskItem("titulo válido", "descrição válida", DateTime.Today.AddDays(2));
+            var newTitle = "Título Atualizado";
+            var newDescription = "Descrição Atualizada";
+            var newDueDate = DateTime.Today.AddDays(5);
+
+
+            task.UpdateDetails(newTitle, newDescription, newDueDate);
+
+            task.Title.Should().Be(newTitle);
+            task.Description.Should().Be(newDescription);
+            task.DueDate.Should().Be(newDueDate);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        public void UpdateDetails_ShouldThrow_WhenTitleIsInvalid(string invalidTitle)
+        {
+            var task = new TaskItem("Titulo Original", "Descricao Original", DateTime.Today.AddDays(2));
+
+            Action act = () => task.UpdateDetails(invalidTitle, "Descrição válida", DateTime.Today.AddDays(5));
+
+            act.Should().Throw<ArgumentException>().WithMessage("Title cannot be empty.");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        public void UpdateDetails_ShouldThrow_WhenDescriptionIsInvalid(string invalidDescription)
+        {
+            var task = new TaskItem("Titulo Original", "Descricao Original", DateTime.Today.AddDays(2));
+
+            Action act = () => task.UpdateDetails("Titulo Atualizado", invalidDescription, DateTime.Today.AddDays(1));
+
+            act.Should().Throw<ArgumentException>().WithMessage("Description cannot be empty.");
+        }
+
+        [Fact]
+        public void UpdateDetails_ShouldThrow_WhenDueDateIsInPast()
+        {
+            var task = new TaskItem("Titulo Original", "Descricao Orignal", DateTime.Today.AddDays(7));
+            var pastDate = DateTime.Today.AddDays(-1);
+
+            Action act = () => task.UpdateDetails("Título Atualizado", "Descrição Atualizada", pastDate);
+
+            act.Should().Throw<ArgumentException>().WithMessage("Due date must be today or in the future.");
+
+        }
     }
 }
