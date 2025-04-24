@@ -1,7 +1,7 @@
 ﻿using TaskManager.Domain.Entities;
 using TaskManager.Domain.Interfaces;
 
-namespace TaskManager.UnitTests.Application.UseCases
+namespace TaskManager.Application.UseCases.Tasks
 {
     public class UpdateTaskUseCase
     {

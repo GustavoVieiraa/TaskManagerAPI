@@ -1,8 +1,6 @@
-﻿
+﻿using TaskManager.Domain.Interfaces;
 
-using TaskManager.Domain.Interfaces;
-
-namespace TaskManager.Application.UseCases
+namespace TaskManager.Application.UseCases.Tasks
 {
     public class DeleteTaskUseCase
     {
